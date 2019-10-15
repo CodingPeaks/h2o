@@ -1,4 +1,5 @@
 const onvif = require('node-onvif');
+const Stream = require('node-rtsp-stream-jsmpeg')
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
@@ -70,6 +71,8 @@ global.direction_lib = {
 
 global.params;
 global.device;
+global.stream_url;
+global.stream;
 global.connected = false;
 
 var discover_result = {};
@@ -84,8 +87,7 @@ onvif.startProbe().then((device_list) => {
 		discover_result[cam_ip] = cam_xaddr;
 	});
 
-	//console.log(discover_result);
-
+	console.log(discover_result);
 }).catch((error) => {
 	console.error(error);
 });
@@ -112,6 +114,12 @@ const server = http.createServer((req, res) => {
 			}
 			break;
 		case 'connect':
+		
+			if(connected){
+				stream.stop();
+				console.log("Stream stopped");
+			}
+		
 			console.log("Connecting...");
 			var user = params.user;
 			var pass = params.pass;
@@ -130,8 +138,19 @@ const server = http.createServer((req, res) => {
 
 				device.init().then(() => {
 					console.log("device inited");
-					//setInterval( snap, 100);
+					stream_url = device.getUdpStreamUrl();
+					//console.log(stream_url);
 					connected = true;
+					
+					const options = {
+					  name: 'streamName',
+					  url: stream_url,
+					  wsPort: 9999
+					}
+
+					stream = new Stream(options);
+					stream.start();					
+					
 				});
 
 			} else {
@@ -165,16 +184,6 @@ server
 		ip.address(),
 		callback
 	)
-
-function snap() {
-	dev.fetchSnapshot().then((res) => {
-		fs.writeFileSync('/var/www/html/snapshot.jpg', res.body, {
-			encoding: 'binary'
-		});
-	}).catch((error) => {
-		console.error(error);
-	});
-}
 
 function loading() {
 	loading = (function () {
