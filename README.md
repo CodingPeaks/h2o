@@ -24,4 +24,3 @@ https://github.com/defunctzombie/node-url
 
 ------- console.table - bahmutov --------
 https://github.com/bahmutov/console.table
-
