@@ -1,4 +1,4 @@
-# H2O - HTTP to ONVIF Proxy.
+# H2O - HTTP to ONVIF Proxy
 
 Currently in development.
 
