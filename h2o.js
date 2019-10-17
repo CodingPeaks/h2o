@@ -1,14 +1,24 @@
 const onvif = require('node-onvif');
-const Stream = require('node-rtsp-stream-jsmpeg')
+const Stream = require('./src/node-rtsp-stream-jsmpeg.js')
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
 var ip = require("ip");
-const fileHTML = fs.readFileSync('controls.html');
+var tb = require("console.table");
+const fileHTML = fs.readFileSync('test/controls.html');
 var r = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
 global.pippo = {};
 var loading;
+console.log(` __________
+< Si vede? >
+ ----------
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||`)
 
+console.log("\n------------------------------------");
 console.log("H2O - HTTP to ONVIF Proxy Server 1.0");
 
 global.direction_lib = {
@@ -79,15 +89,14 @@ var discover_result = {};
 loading();
 onvif.startProbe().then((device_list) => {
 	clearInterval(loading);
-	console.log("Onvif device scan result: " + device_list.length + " device(s) found.");
-	console.log("\x1b[32m", "• READY", "\x1b[0m");
 	device_list.forEach((device) => {
 		var cam_xaddr = device.xaddrs[0];
 		var cam_ip = cam_xaddr.match(r);
 		discover_result[cam_ip] = cam_xaddr;
 	});
 
-	console.log(discover_result);
+	console.table("Onvif device scan result: " + device_list.length + " device(s) found:\n", discover_result);
+	console.log("\x1b[32mREADY\x1b[0m\n");
 }).catch((error) => {
 	console.error(error);
 });
@@ -100,8 +109,8 @@ const server = http.createServer((req, res) => {
 		switch (params.action) {
 		case 'move':
 			if (connected) {
-				console.log("Moving...");
 				var direction = params.movement;
+				console.log("Sending ONVIF command: "+direction);
 				pippo = direction_lib[direction];
 				//console.log(pippo);
 				device.ptzMove({
@@ -175,7 +184,7 @@ const server = http.createServer((req, res) => {
 const callback = () => {
 	const address = server.address().address;
 	const port = server.address().port;
-	console.log(`Server started at http://${address}:${port}`);
+	console.log('\x1b[33m%s\x1b[0m', "Server started at http://"+address+":"+port)
 }
 
 server
