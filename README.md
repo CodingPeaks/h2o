@@ -1,40 +1,55 @@
-# H2O - HTTP to ONVIF Proxy
 
-Currently in development.
+H2O - HTTP to ONVIF Proxy
+=======================
 
-!!! ALPHA !!! 
+Application in Node JS that allows you to interact with IP Cameras through the use of the SOAP protocol and the ONVIF standard using the HTTP API.
 
-####################### USAGE #######################
+Just install the dependencies, start application and it is ready to use!
 
-1. Start the server
 
-      node h2o.js
-      
-   This will scan your network for ONVIF devices and will list them when it's done.
-      
-2. Connect to an ONVIF camera
+Requirements
+============
+* nodejs >= 8.0.0
+* npm >= 4.0.0
 
-      ```
-      curl "http://{SERVERIP}:{PORT}/?action=connect&ip={CAMIPADDRESS}&user={CAMUSERNAME}&pass={CAMPASSWORD}"
-      ```
-      
-3. Control it!
 
-      ```
-      curl "http://{SERVERIP}:{PORT}/?action=move&movement=right"
-      ```
-      
+## 📎 Menu
+- 🔨 [Installation](#-installation)
+- 🚀 [How to use](#-howtouse)
+- 📷 [Screenshot](#-screenshot)
+- 📚 [Documentation](#-documentation)
+- 👨‍💻 [Contributing](#-contributing)
+- 🐛 [Known Bugs](https://github.com/CodingPeaks/h2o/issues)
+
+Installation
+============
+
+    bash install.sh
+
+Usage
+=====
+
+**1. Start the server** 🚀
+
+	node h2o.js
+
+This will scan your network for ONVIF devices and will list them when it's done.
+    
+**2. Connect to an ONVIF camera** 👀
+
+	curl "http://{SERVERIP}:{PORT}/?action=connect&ip={CAMIPADDRESS}&user={CAMUSERNAME}&pass={CAMPASSWORD}"
+
 You can also quickly test this program simply by starting the server and writing in to the browser address bar
 
-      http://{SERVERIP}:{PORT}?action=connect&ip={CAMIPADDRESS}&user={CAMUSERNAME}&pass={CAMPASSWORD}
+![JSON Token Replace](https://raw.githubusercontent.com/CodingPeaks/h2o/master/img/urlconn.png)
 
-[ Coming soon: installation script ]
+**3. Control it!** 💣
 
-Let us know your thoughts!
+	curl "http://{SERVERIP}:{PORT}/?action=move&movement=right"
 
-####################################################
 
-Credits (Thanks to):
+Credits
+=======
 
 NODE ONVIF - Futomi 
 [https://github.com/futomi/node-onvif]
