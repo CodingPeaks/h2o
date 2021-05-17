@@ -14,19 +14,19 @@ Requirements
 
 
 ## 📎 Menu
-- 🔨 [Installation](#-installation)
-- 🚀 [How to use](#-howtouse)
-- 📷 [Screenshot](#-screenshot)
-- 📚 [Documentation](#-documentation)
-- 👨‍💻 [Contributing](#-contributing)
+- 🔨 [Installation](#installation)
+- 🚀 [Usage](#usage)
+- 📷 [Screenshot](#screenshot)
+- 📙 [Documentation](#documentation)
+- 👷‍♂️ [Contributing](#contributing)  
 - 🐛 [Known Bugs](https://github.com/CodingPeaks/h2o/issues)
 
-Installation
+🔨 Installation
 ============
 
     bash install.sh
 
-Usage
+🚀 Usage
 =====
 
 **1. Start the server** 🚀
@@ -41,12 +41,33 @@ This will scan your network for ONVIF devices and will list them when it's done.
 
 You can also quickly test this program simply by starting the server and writing in to the browser address bar
 
-![JSON Token Replace](https://raw.githubusercontent.com/CodingPeaks/h2o/master/img/urlconn.PNG)
+![JSON Token Replace](https://raw.githubusercontent.com/CodingPeaks/h2o/master/img/urlconn.png)
 
 **3. Control it!** 💣
 
 	curl "http://{SERVERIP}:{PORT}/?action=move&movement=right"
 
+📷 Screenshot
+=====
+
+ 📙 Documentation
+=====
+
+👷‍♂️ Contributing 
+=======
+<!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/anAverageSlavGuy"><img src="https://avatars.githubusercontent.com/u/55255040?v=4" width="100px" alt=""/><br /><sub><b>Yevgeniy Shavlay</b></sub></a><br /><a href="https://github.com/anAverageSlavGuy" title="Code">💻</a> <a href="https://github.com/anAverageSlavGuy" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/CodingPeaks"><img src="https://avatars.githubusercontent.com/u/39136442?v=4" width="100px" alt=""/><br /><sub><b>Marco Nardone</b></sub></a><br /><a href="https://github.com/CodingPeaks" title="Code">💻</a> <a href="https://github.com/CodingPeaks" title="Bug reports">🐛</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 Credits
 =======
