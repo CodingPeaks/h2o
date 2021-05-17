@@ -1,0 +1,79 @@
+<html><head>
+    
+    <style>
+
+        .cam-card{
+            flex: 0 0 18%;
+            height: 16vh;
+            background: white;
+            border-radius: 19px;
+            margin: 1%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-cont{
+            width: 90%;
+            height: 80%;
+            display: flex;
+            flex-wrap: wrap;
+            margin: auto;
+            align-items: center;
+        }
+
+        .ODF{
+            margin: 1%;
+            font-family: system-ui;
+            color: white;
+            text-shadow: 0 0 15px rgb(0 0 0 / 35%), 0 0 10px rgb(0 0 0 / 62%);
+            height: 4%;
+        }
+
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        
+        $( document ).ready(function() {
+            getDevices();
+        });
+
+        function getDevices(){
+            $.get( window.location.origin, { action: "list" }, function( data ) {
+              for(var i in data){
+                console.log(i+", "+data[i]);
+                $(".card-cont").append(`<div class="cam-card">${i}<br>${data[i]}</div>`);
+              }
+            });
+
+        }
+
+    </script>
+
+</head>
+   <body style="
+      margin: 0;
+      background: #da8300;
+      ">
+      <div style="height: 8%;background: #344955;border-bottom: 3px solid white;">
+         <h1 style="
+            padding: 0% 1%;
+            font-family: system-ui;
+            font-size: 3em;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgb(0 0 0 / 35%), 0 0 10px rgb(0 0 0 / 62%);
+            ">H<sub style="
+            color: #da8300;
+            font-size: 0.7em;
+            ">2</sub>O Proxy</h1>
+      </div>
+
+      <h1 class="ODF">ONVIF devices found:</h1>
+
+<div class="card-cont">
+
+</div>
+   
+</body></html>

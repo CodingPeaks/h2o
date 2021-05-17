@@ -7,7 +7,7 @@ const readline = require("readline");
 var ip = require("ip");
 var os_nics = require('os').networkInterfaces();
 var tb = require("console.table");
-const fileHTML = fs.readFileSync('test/controls.html');
+const fileHTML = fs.readFileSync('test/index.html');
 var r = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
 global.pippo = {};
 var loading;
@@ -176,6 +176,7 @@ loading();
 	onvif.startProbe({bind_address: bound_address}).then((device_list) => {
 		clearInterval(loading);
 		var discover_result_table = [];
+
 		device_list.forEach((device) => {
 			var cam_xaddr = device.xaddrs[0];
 			var cam_ip = cam_xaddr.match(r);
@@ -198,6 +199,15 @@ loading();
 		params = url.parse(req.url, true).query;
 
 		switch (params.action) {
+		case 'list':
+				console.log("Listing ONVIF cams");
+				res.writeHead(200, {
+						'Content-Type': 'application/json'
+				});
+				res.end(JSON.stringify(discover_result));
+
+			break;
+
 		case 'move':
 			if (connected) {
 				var direction = params.movement;
