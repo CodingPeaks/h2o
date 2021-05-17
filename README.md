@@ -41,7 +41,7 @@ This will scan your network for ONVIF devices and will list them when it's done.
 
 You can also quickly test this program simply by starting the server and writing in to the browser address bar
 
-![JSON Token Replace](https://raw.githubusercontent.com/CodingPeaks/h2o/master/img/urlconn.png)
+![JSON Token Replace](https://raw.githubusercontent.com/CodingPeaks/h2o/master/img/urlconn.PNG)
 
 **3. Control it!** 💣
 
