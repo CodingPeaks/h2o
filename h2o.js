@@ -41,7 +41,6 @@ console.log("\n------------------------------------");
 console.log("H2O - HTTP to ONVIF Proxy Server 1.0");
 
 delete os_nics.lo;
-//delete os_nics.tun0;
 
 if(Object.keys(os_nics).length > 1 && ifname == ""){
 
@@ -171,18 +170,20 @@ global.stream;
 global.connected = false;
 
 var discover_result = {};
+var discover_result_table = [];
+
 loading();
 
 	onvif.startProbe({bind_address: bound_address}).then((device_list) => {
 		clearInterval(loading);
-		var discover_result_table = [];
 
 		device_list.forEach((device) => {
 			var cam_xaddr = device.xaddrs[0];
 			var cam_ip = cam_xaddr.match(r);
-			var temp = [];
-			temp["Cam IP"] = cam_xaddr.match(r)
-			temp["XADDR"] = device.xaddrs[0];
+			var temp = {};
+			temp["name"] = device.name;
+			temp["address"] = cam_xaddr.match(r)[0];
+			temp["xaddr"] = device.xaddrs[0];
 			discover_result_table.push(temp);
 			discover_result[cam_ip] = cam_xaddr;
 		});
@@ -204,7 +205,7 @@ loading();
 				res.writeHead(200, {
 						'Content-Type': 'application/json'
 				});
-				res.end(JSON.stringify(discover_result));
+				res.end(JSON.stringify(discover_result_table));
 
 			break;
 

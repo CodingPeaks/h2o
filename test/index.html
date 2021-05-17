@@ -6,11 +6,26 @@
             flex: 0 0 18%;
             height: 16vh;
             background: white;
-            border-radius: 19px;
-            margin: 1%;
+            border-radius: 12px;
+            margin: 1% 0 0 1%;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: system-ui;
+            position: relative;
+            cursor: pointer;
+            transition: 0.4s ease;
+        }
+
+        .cam-card:hover {
+          transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+        }
+
+        .cam-card-text{
+          width: 90%;
+          bottom: 8%;
+          position: absolute;
+          text-shadow: 0 0 15px rgb(0 0 0 / 35%), 0 0 10px rgb(0 0 0 / 62%);
         }
 
         .card-cont{
@@ -42,10 +57,19 @@
 
         function getDevices(){
             $.get( window.location.origin, { action: "list" }, function( data ) {
-              for(var i in data){
-                console.log(i+", "+data[i]);
-                $(".card-cont").append(`<div class="cam-card">${i}<br>${data[i]}</div>`);
-              }
+              data.forEach(function (arrayItem) {
+                $(".card-cont").append(`<div class="cam-card">
+                       <div class="cam-card-text">
+                          <span style="font-size: 1.5em;">
+                            ${arrayItem.name}
+                          </span>
+                          <br>
+                          <span style="font-size: 0.8em;">
+                            ${arrayItem.xaddr}
+                          </span>
+                       </div>
+                    </div>`);
+              });
             });
 
         }
@@ -69,11 +93,8 @@
             font-size: 0.7em;
             ">2</sub>O Proxy</h1>
       </div>
-
+<div id="main-cont">
       <h1 class="ODF">ONVIF devices found:</h1>
-
-<div class="card-cont">
-
+      <div class="card-cont"></div>
 </div>
-   
 </body></html>
