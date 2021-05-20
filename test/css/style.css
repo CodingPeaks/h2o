@@ -1,0 +1,114 @@
+    	#home-cont{
+    		transition: 0.4s ease;
+		    width: 100%; /*15*/
+		    /*background: #4a6572;*/
+		    /*border-right: 3px solid white;*/
+		    height: 100%;
+            overflow: auto;
+    	}
+
+        #video-cont{
+            transition: 0.4s ease;
+            width: 84.5%;
+            right: 0;
+            display: none;
+            height: 100%;
+            overflow: auto;
+            background: black;
+            position: relative;
+        }
+
+        #stream{
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: none;
+        }
+
+        #main-cont{
+            transition: 0.4s ease;
+            width: 100%; /*15*/
+            /*background: #4a6572;*/
+            /*border-right: 3px solid white;*/
+            position: absolute;
+            height: calc(91% + 6px);
+            overflow: hidden;
+            display: flex;
+        }    
+
+        .cam-card{
+            flex: 0 0 23.7%;
+            height: 12vw;
+            background: white;
+            border-radius: 12px;
+            margin: 1% 0 0 1%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: system-ui;
+            position: relative;
+            cursor: pointer;
+            transition: 0.4s ease;
+        }
+
+        .cam-card:hover {
+          transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+        }
+
+        .cam-card-text{
+          width: 90%;
+          bottom: 8%;
+          position: absolute;
+          text-shadow: 0 0 15px rgb(0 0 0 / 35%), 0 0 10px rgb(0 0 0 / 62%);
+        }
+
+        .card-cont{
+            width: 90%;
+            height: 80%;
+            margin: 4%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .ODF{
+            width: 90%;
+            margin: 4% auto;
+            font-family: system-ui;
+            color: white;
+            text-shadow: 0 0 15px rgb(0 0 0 / 35%), 0 0 10px rgb(0 0 0 / 62%);
+            height: 4%;
+        }
+
+        .lds-dual-ring {
+            display: none;
+            width: 80px;
+            z-index: 1;
+            height: 80px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+        .lds-dual-ring:after {
+          content: " ";
+          display: block;
+          width: 64px;
+          height: 64px;
+          margin: 8px;
+          border-radius: 50%;
+          border: 6px solid  #da8300;
+          border-color:  #da8300 transparent  #da8300 transparent;
+          animation: lds-dual-ring 1.2s linear infinite;
+        }
+
+        @keyframes lds-dual-ring {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }

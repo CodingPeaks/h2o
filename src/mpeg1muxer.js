@@ -16,7 +16,7 @@ class Mpeg1Muxer extends EventEmitter {
 
     this.inputStreamStarted = true
     this.stream.stdout.on('data', (data) => { return this.emit('mpeg1data', data) })
-    this.stream.stderr.on('data', (data) => { return this.emit('ffmpegError', data) })
+    this.stream.stderr.on('data', (data) => { console.log(data); return this.emit('ffmpegError', data) })
 	this.pid = this.stream.pid;
   }
 }

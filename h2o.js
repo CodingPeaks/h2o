@@ -5,10 +5,13 @@ const url = require('url');
 const fs = require('fs');
 const readline = require("readline");
 var ip = require("ip");
+const express = require('express');
+const app = express()
 var os_nics = require('os').networkInterfaces();
 var tb = require("console.table");
 const fileHTML = fs.readFileSync('test/index.html');
 var r = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
+const HTTP_PORT = 8070;
 global.pippo = {};
 var loading;
 var myArgs = process.argv.slice(2);
@@ -95,15 +98,9 @@ function loading() {
 
 function main(name){
 
-const callback = () => {
-	const address = server.address().address;
-	const port = server.address().port;
-	console.log('\x1b[33m%s\x1b[0m', "Server started at http://"+address+":"+port)
-}
-
 const bound_address = getIpFromInterfaceName(name);
 
-console.log(`Interface \"${name}\" selected, binding to ${bound_address}\n`)
+console.log(`Interface \"${name}\" selected, binding to ${bound_address}\n`);
 
 global.direction_lib = {
 	"up": {
@@ -174,7 +171,7 @@ var discover_result_table = [];
 
 loading();
 
-	onvif.startProbe({bind_address: bound_address}).then((device_list) => {
+onvif.startProbe({bind_address: bound_address}).then((device_list) => {
 		clearInterval(loading);
 
 		device_list.forEach((device) => {
@@ -190,102 +187,114 @@ loading();
 
 		console.table("Onvif device scan result: " + device_list.length + " device(s) found:\n", discover_result_table);
 		console.log("\x1b[32mREADY\x1b[0m\n");
-	}).catch((error) => {
+}).catch((error) => {
 		console.error(error);
-	});
-
-	global.server = http.createServer((req, res) => {
-
-	if (req.url != '/favicon.ico') {
-		params = url.parse(req.url, true).query;
-
-		switch (params.action) {
-		case 'list':
-				console.log("Listing ONVIF cams");
-				res.writeHead(200, {
-						'Content-Type': 'application/json'
-				});
-				res.end(JSON.stringify(discover_result_table));
-
-			break;
-
-		case 'move':
-			if (connected) {
-				var direction = params.movement;
-				console.log("Sending ONVIF command: "+direction);
-				pippo = direction_lib[direction];
-				//console.log(pippo);
-				device.ptzMove({
-					'speed': pippo
-				}).catch((error) => {
-					console.error(error);
-				});
-			} else {
-				console.log("Device is not connected");
-			}
-			break;
-		case 'connect':
-		
-			if(connected){
-				stream.stop();
-				console.log("Stream stopped");
-			}
-		
-			console.log("Connecting...");
-			var user = params.user;
-			var pass = params.pass;
-			var ip = params.ip;
-			var xaddr = discover_result[ip];
-
-			if (xaddr) {
-
-				console.log("Connecting to " + xaddr);
-
-				device = new onvif.OnvifDevice({
-					xaddr: xaddr,
-					user: user,
-					pass: pass
-				});
-
-				device.init().then(() => {
-					console.log("device inited");
-					stream_url = device.getUdpStreamUrl();
-					//console.log(stream_url);
-					connected = true;
-					
-					const options = {
-					  name: 'streamName',
-					  url: stream_url,
-					  wsPort: 9999
-					}
-
-					stream = new Stream(options);
-					stream.start();					
-					
-				});
-
-			} else {
-				console.log("xaddress not found!");
-				connected = false;
-			}
-
-			break;
-		default:
-			console.log("Command not recognized.");
-			break;
-		}
-	}
-
-	res.writeHead(200, {
-		'Content-Type': 'text/html'
-	});
-
-	res.end(fileHTML);
 });
 
-server.listen(
-		8070,
-		bound_address,
-		callback
-	)
+
+app.use(express.static('test'));
+
+app.get('/', (req, res) => {
+    res.send();
+});
+
+app.get('/list', (req, res) => {
+	console.log("Listing ONVIF devices");
+    res.send(JSON.stringify(discover_result_table));
+});
+
+app.get('/connect/:ip/:user/:pass', function (req, res) {
+	if(connected){
+		stream.stop();
+		console.log("Stream stopped");
+	}
+		
+	var user = req.params.user;
+	var pass = req.params.pass;
+	var ip = req.params.ip;
+	var xaddr = discover_result[ip];
+
+	if (xaddr) {
+
+		console.log("Connecting to " + xaddr);
+
+		device = new onvif.OnvifDevice({
+			xaddr: xaddr,
+			user: user,
+			pass: pass
+		});
+
+		device.init().then(() => {
+			var msg = "Device inited";
+			console.log(msg);
+			stream_url = device.getUdpStreamUrl().split("rtsp://");
+			stream_url = "rtsp://" + user + ":" + pass + "@" + stream_url[1];
+
+			connected = true;
+					
+			const options = {
+				name: 'streamName',
+				url: stream_url,
+				wsPort: 9999
+			}
+
+			stream = new Stream(options);
+			stream.start();					
+					
+		});
+
+	} else {
+		var msg = "Xaddress not found!";
+		connected = false;
+	}
+
+	console.log(msg);
+  	res.send(msg);
+});
+
+app.get('/move/:direction', function (req, res) {
+	var direction = req.params.direction;
+	if (connected) {
+		console.log("Sending ONVIF command: "+direction);
+		pippo = direction_lib[direction];
+		var msg = 'Moving camera to '+direction;
+		device.ptzMove({
+			'speed': pippo
+		}).catch((error) => {
+			console.error(error);
+		});
+			
+	} else {
+		var msg = "Device is not connected";
+	}
+
+	console.log(msg);
+  	res.send(msg);
+});
+
+app.get('/stop', function (req, res) {
+	if (connected) {
+		console.log("Sending ONVIF command: Stop");
+		pippo = direction_lib['stop'];
+		var msg = 'Stopping camera';
+		device.ptzMove({
+			'speed': pippo
+		}).catch((error) => {
+			console.error(error);
+		});
+			
+	} else {
+		var msg = "Device is not connected";
+	}
+
+	console.log(msg);
+  	res.send(msg);
+});
+
+
+app.listen(HTTP_PORT, () => console.log('\x1b[33m%s\x1b[0m', "Server started at http://"+bound_address+":"+HTTP_PORT));
+
+
+
 }
+	
