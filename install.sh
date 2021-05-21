@@ -56,9 +56,10 @@ installnodepkg node-onvif
 installnodepkg ip
 installnodepkg console.table
 installnodepkg http-shutdown
+installnodepkg express
 
 echo "Replacing node-onvif.js..."
 
-mv src/node-onvif.js node_modules/node-onvif/lib/
+cp src/node-onvif.js node_modules/node-onvif/lib/
 
 echo "DONE"

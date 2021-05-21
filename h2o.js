@@ -212,6 +212,7 @@ app.get('/connect/:ip/:user/:pass', function (req, res) {
 	var user = req.params.user;
 	var pass = req.params.pass;
 	var ip = req.params.ip;
+	console.log(discover_result);
 	var xaddr = discover_result[ip];
 
 	if (xaddr) {

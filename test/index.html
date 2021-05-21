@@ -35,7 +35,9 @@
 
 
 		$(document).on('click','.cam-card',function(){
-       $('.login-back').fadeIn(250);
+      var cam_ip = $(this).data("ip");
+      $("#cam-ip").html(cam_ip);
+      $('.login-back').fadeIn(250);
 			
 		});
 
@@ -162,7 +164,7 @@
 
 <div class="login-back">
   <div class="login">  
-    <div id="cam-ip" class="login-header">192.168.1.202</div>
+    <div id="cam-ip" class="login-header">Log In</div>
     <form class="login-container">
       <p><input id="cam-user" type="email" placeholder="Username"></p>
       <p><input id="cam-pass" type="password" placeholder="Password"></p>
