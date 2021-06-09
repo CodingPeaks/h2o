@@ -88,6 +88,24 @@ function main(name) {
 		res.send(JSON.stringify(discover_result_table));
 	});
 
+	app.get('/snap', (req, res) => {
+		console.log("Checking snapshot");
+		const path = '/test/snapshot.png';
+		var result = '0';
+		try {
+		  if (fs.existsSync(path)) {
+		    var result = '1';
+		  } else {
+		  	var result = '0';
+		  }
+		} catch(err) {
+		  console.error(err)
+		}
+
+		res.send(result);
+	});
+	
+
 	app.get('/connect/:ip/:user/:pass', function(req, res) {
 		if (connected) {
 			stream.stop();
@@ -97,18 +115,17 @@ function main(name) {
 		var user = req.params.user;
 		var pass = req.params.pass;
 		var ip = req.params.ip;
-		console.log(discover_result);
 		var xaddr = discover_result[ip];
 
 		if (xaddr) {
-
-			console.log("Connecting to " + xaddr);
 
 			device = new onvif.OnvifDevice({
 				xaddr: xaddr,
 				user: user,
 				pass: pass
 			});
+
+			var msg = "Connecting to " + xaddr + " User:"+user+" Pass:"+pass;
 
 			device.init().then(() => {
 				var msg = "Device inited";
@@ -127,6 +144,17 @@ function main(name) {
 				stream = new Stream(options);
 				stream.start();
 
+				let profile = device.getCurrentProfile();
+				console.log(JSON.stringify(profile, null, '  '));
+				console.log('Fetching the data of the snapshot...');
+				return device.fetchSnapshot();
+
+			}).then((res) => {
+			  // Save the data to a file
+			  fs.writeFileSync('/test/snapshot.png', res.body, {encoding: 'binary'});
+			  console.log('Snapshot done!');
+			}).catch((error) => {
+			  console.error(error);
 			});
 
 		} else {
@@ -200,7 +228,7 @@ function bindOnvifInterface() {
 
 
 	delete os_nics.lo;
-	if (Object.keys(os_nics).length > 1 && interface_name == "") {
+	if (Object.keys(os_nics).length > 1 && (interface_name == "" || interface_name == undefined)) {
 
 		//console.log("\nMultiple network intefaces detected, which one do you want me to use?\n");
 
